@@ -1,12 +1,16 @@
 # hide
 
-An application to make you to appear more productive.
+An application to make you more productive.
+Well, at least appear so.
 
 Setup instructions:
-1. `pip install pyqt5`
-2. `pip install pymongo`
-3. `pip install dnspython`
-4. Set up `cmake version 3.17.0`
+1. Open terminal, enter commands: 
+```
+  pip install pyqt5 
+  pip install pymongo
+  pip install dnspython
+```
+2. Set up `cmake version 3.17.0`
 
 Run instructions:
 Go to terminal
