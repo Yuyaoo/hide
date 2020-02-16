@@ -4,9 +4,7 @@ from PyQt5.QtWidgets import QLabel, QFileDialog
 import re
 from mongoConnection import MongoConnect
 
-global blackUrlList
-global blackPersonList
-
+    
 class Ui_MainWindow(object):
 
     def validateURL(self, url):
@@ -87,6 +85,8 @@ class Ui_MainWindow(object):
         return self.mongo.ImageList
 
     def setupUi(self, MainWindow):
+        self.myThread = YourThreadName()
+        self.myThread.start()
         self.initMongo()
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(675, 536)
@@ -203,7 +203,6 @@ class Ui_MainWindow(object):
             exec("self." + name + ".setText(_translate(\"MainWindow\", item.get('url')))")
 
         self.setImagesArea()
-        blackPersonList = self.mongo.ImageList
     
         self.deleteButton.setText(_translate("MainWindow", "Delete"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Configure Windows"))
@@ -217,6 +216,5 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-    #ui.initMongo()
     MainWindow.show()
     sys.exit(app.exec_())
