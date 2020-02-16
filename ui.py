@@ -1,8 +1,10 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QLabel, QFileDialog
 import re
 from mongoConnection import MongoConnect
+from thing import imageList
+
 
 class Ui_MainWindow(object):
 
@@ -23,6 +25,14 @@ class Ui_MainWindow(object):
         else: 
             print ("Nah, bad URL. try again ^_^")
     
+    def getfile(self):
+        # pop up dialogue to select photo from folder
+        fileName = QFileDialog.getOpenFileName(MainWindow,
+    'Open Image', 'C:\\Users\\Yuyao\\Desktop\\hackathon2020\\hide\\img', 'Image Files (*.png *.jpg *.bmp)')
+        self.mongo.insertImage(fileName[0])
+        self.cleanImageSpace()
+        self.setImagesArea()
+
     def initMongo(self):
         self.mongo = MongoConnect()
         # initialize database
@@ -30,10 +40,14 @@ class Ui_MainWindow(object):
         
     def cleanForm(self):
         while self.urlForm.count():
-            print (self.urlForm.count())
             child = self.urlForm.takeAt(0)
             if child.widget():
                 child.widget().deleteLater()
+
+    def cleanImageSpace(self):
+        size = len(self.mongo.ImageList)
+        for i in range(size):
+            exec("self.image" + str(i+1) + ".clear()")
 
     def setURLCheckBoxes(self):
         self.mongo.getURLs()
@@ -54,6 +68,18 @@ class Ui_MainWindow(object):
             self.urlForm.setWidget((i+1), QtWidgets.QFormLayout.FieldRole, tempCheckbox)
             exec("self." + name + " = tempCheckbox")
 
+    def setImagesArea(self):
+        self.mongo.getImages()
+        list = self.mongo.ImageList
+        for i, item in enumerate(list):
+            print ("operating image #" + str(i))
+            varName = "self.image" + str(i+1)
+            exec(varName + " = QtWidgets.QLabel(self.tab_1)")
+            pixmap = QtGui.QPixmap(item) #item is the path of the image
+            exec(varName + ".resize(150,150)")
+            exec(varName + ".setPixmap(pixmap.scaled(" + varName + ".size(), QtCore.Qt.IgnoreAspectRatio))")
+            exec(varName + ".setGeometry(QtCore.QRect(" + str(50 + 160 * i) + ", 230, 150, 150))")
+            exec(varName + ".show()")
 
     def setupUi(self, MainWindow):
         self.initMongo()
@@ -74,9 +100,10 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.label_5.setFont(font)
         self.label_5.setObjectName("label_5")
-        self.pushButton = QtWidgets.QPushButton(self.tab_1)
-        self.pushButton.setGeometry(QtCore.QRect(60, 80, 141, 41))
-        self.pushButton.setObjectName("pushButton")
+        self.imageButton = QtWidgets.QPushButton(self.tab_1)
+        self.imageButton.setGeometry(QtCore.QRect(60, 80, 141, 41))
+        self.imageButton.setObjectName("imageButton")
+        self.imageButton.clicked.connect(self.getfile)
         self.label_6 = QtWidgets.QLabel(self.tab_1)
         self.label_6.setGeometry(QtCore.QRect(50, 180, 201, 41))
         font = QtGui.QFont()
@@ -149,6 +176,8 @@ class Ui_MainWindow(object):
         self.menuAdd_File.addSeparator()
         self.menubar.addAction(self.menuAdd_File.menuAction())
 
+        self.setImagesArea()
+
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -156,9 +185,9 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label_5.setText(_translate("MainWindow", "Select forbidden person Image"))
-        self.pushButton.setText(_translate("MainWindow", "Upload Image"))
-        self.label_6.setText(_translate("MainWindow", "Forbidden People"))
+        self.label_5.setText(_translate("MainWindow", "Select image of Boss"))
+        self.imageButton.setText(_translate("MainWindow", "Upload Image"))
+        self.label_6.setText(_translate("MainWindow", "Forbidden List:"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_1), _translate("MainWindow", "Configure Dangerous People"))
         self.label.setText(_translate("MainWindow", "There is a mysterious pack of ketchup in front of you."))
         self.lineEdit.setText(_translate("MainWindow", "reddit.com"))
@@ -166,14 +195,15 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "Add Website URL to hide"))
         self.label_3.setText(_translate("MainWindow", "placeholder"))
         self.label_4.setText(_translate("MainWindow", "Configure URLs"))
-        # self.url2Label.setText(_translate("MainWindow", "url2222"))
-        # self.url3Label.setText(_translate("MainWindow", "url3"))
+
 
         list = self.mongo.URLlist
         for item in list:
             name = item.get('name') + 'Label'
             exec("self." + name + ".setText(_translate(\"MainWindow\", item.get('url')))")
 
+        self.setImagesArea()
+    
         self.deleteButton.setText(_translate("MainWindow", "Delete"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Configure Windows"))
         self.emergencyHideButton.setText(_translate("MainWindow", "HIDE!"))

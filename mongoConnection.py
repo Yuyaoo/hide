@@ -30,6 +30,27 @@ class MongoConnect():
 			if not item in self.URLlist:
 				self.URLlist.append(item)
 
+	def insertImage(self, imageName):
+		self.image = {
+			'name': imageName
+		}
+
+		# insert into database
+		self.result = self.db.images.insert_one(self.image)
+
+		print ('inserted image document id: ', self.result.inserted_id)
+		print ('finish')
+
+	def getImages(self):
+		# mongo GET 
+		query = self.db.images.find({})
+		print ("A list of all items:")
+		self.ImageList = []
+		for item in query:
+			print (item.get('name'))
+			if not item in self.ImageList:
+				self.ImageList.append(item.get('name'))
+
 	def deleteURL(self, url):
 		# mongo DELETE
 		self.db.urls.delete_many({'url': url})
