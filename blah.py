@@ -1,6 +1,7 @@
 import pyautogui as auto
 import pyperclip
 import re
+from ui import blackUrlList
 
 def hotkeyCtrl(c):
     auto.keyDown('ctrl')
@@ -31,8 +32,6 @@ chromeWindow.activate()
 # click -> ctrl A -> copy -> verify
 # close and loop or end
 
-blacklist = ["reddit.com", "facebook.com", "youtube.com"]
-
 originalUrl = getCurrentUrl()
 closed = False
 
@@ -41,8 +40,8 @@ while True:
         nextTab()
     closed = False
     theUrl = getCurrentUrl()
-    for site in blacklist:
-        if site in theUrl:
+    for site in blackUrlList:
+        if site.get('url') in theUrl:
             closeTab()
             closed = True
             break

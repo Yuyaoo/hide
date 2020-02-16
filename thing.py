@@ -1,13 +1,14 @@
 import face_recognition
 import cv2
 import numpy as np
+from ui import blackPersonList
 
 video_capture = cv2.VideoCapture(0)
 
-imageList = ("img/chris.jpg", "img/lucy.jpg")
+# imageList = ("img/chris.jpg", "img/lucy.jpg")
 
 images = []
-for imgFile in imageList:
+for imgFile in blackPersonList:
     images.append(face_recognition.load_image_file(imgFile))
 
 known_face_encodings = []
