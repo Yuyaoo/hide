@@ -76,7 +76,7 @@ class Ui_MainWindow(object):
             varName = "self.image" + str(i+1)
             exec(varName + " = QtWidgets.QLabel(self.tab_1)")
             pixmap = QtGui.QPixmap(item) #item is the path of the image
-            exec(varName + ".resize(150,150)")
+            exec(varName + ".resize(120,150)")
             exec(varName + ".setPixmap(pixmap.scaled(" + varName + ".size(), QtCore.Qt.IgnoreAspectRatio))")
             exec(varName + ".setGeometry(QtCore.QRect(" + str(50 + 160 * i) + ", 230, 150, 150))")
             exec(varName + ".show()")
@@ -85,8 +85,6 @@ class Ui_MainWindow(object):
         return self.mongo.ImageList
 
     def setupUi(self, MainWindow):
-        self.myThread = YourThreadName()
-        self.myThread.start()
         self.initMongo()
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(675, 536)
@@ -192,7 +190,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_1), _translate("MainWindow", "Configure People"))
         self.lineEdit.setText(_translate("MainWindow", "reddit.com"))
         self.okURLButton.setText(_translate("MainWindow", "Ok"))
-        self.label_2.setText(_translate("MainWindow", "Add Website URL to hide"))
+        self.label_2.setText(_translate("MainWindow", "Add Website URL"))
         self.label_3.setText(_translate("MainWindow", ""))
         self.label_4.setText(_translate("MainWindow", "Configure URLs"))
 

@@ -109,22 +109,21 @@ while True:
         matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
         name = "Unknown"
 
-        # # If a match was found in known_face_encodings, just use the first one.
-        # if True in matches:
-        #     first_match_index = matches.index(True)
-        #     name = known_face_names[first_match_index]
+        # If a match was found in known_face_encodings, just use the first one.
+        if True in matches:
+            first_match_index = matches.index(True)
+            name = known_face_names[first_match_index]
 
         # Or instead, use the known face with the smallest distance to the new face
-        face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
-        best_match_index = np.argmin(face_distances)
-        if matches[best_match_index]:
-            name = known_face_names[best_match_index]
+##        face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
+##        best_match_index = np.argmin(face_distances)
+##        if matches[best_match_index]:
+##            name = known_face_names[best_match_index]
 
         face_names.append(name)
 
-
+    
     for name in face_names:
-        print(name)
         if name in known_face_names:
             goClose()
 
